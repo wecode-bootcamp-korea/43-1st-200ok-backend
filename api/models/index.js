@@ -1,5 +1,5 @@
-const DbdataSource = require("./dataSource");
+const dbDataSource = require("./dataSource");
 
 module.exports = {
-  DbdataSource,
+  dbDataSource,
 };
