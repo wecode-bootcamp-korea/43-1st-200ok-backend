@@ -5,3 +5,4 @@ CREATE TABLE product_colors(
 )
 
 -- migrate:down
+DROP TABLE product_colors;

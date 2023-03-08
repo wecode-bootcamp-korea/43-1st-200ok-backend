@@ -11,3 +11,4 @@ CREATE TABLE carts(
 )
 
 -- migrate:down
+DROP TABLE carts;
