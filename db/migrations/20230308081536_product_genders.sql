@@ -5,3 +5,4 @@ CREATE TABLE product_genders(
 )
 
 -- migrate:down
+DROP TABLE product_genders;

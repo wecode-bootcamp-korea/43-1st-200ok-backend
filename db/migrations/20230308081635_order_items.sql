@@ -8,8 +8,9 @@ CREATE TABLE order_items (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT order_items_product_options_product_option_id_fkey FOREIGN KEY (product_option_id) REFERENCES product_options(id),
-  CONSTRAINT order_items_orders_order_id_fkey FOREIGN KEY (orders_id) REFERENCES orders(id),
-  CONSTRAINT order_items_order_statuses_order_status_id_fkey FOREIGN KEY (order.status_id) REFERENCES order.statuses(id)
+  CONSTRAINT order_items_orders_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id),
+  CONSTRAINT order_items_order_statuses_order_status_id_fkey FOREIGN KEY (order_status_id) REFERENCES order_statuses(id)
 )
 
 -- migrate:down
+DROP TABLE order_items;
