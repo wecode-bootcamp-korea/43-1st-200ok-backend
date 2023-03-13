@@ -1,5 +1,7 @@
-const mainpageController = require("./mainpageController");
+const productController = require("./productController");
+const cartController = require("./cartController");
 
 module.exports = {
-  mainpageController,
+  productController,
+  cartController,
 };

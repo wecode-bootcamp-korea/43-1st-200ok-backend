@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const mainpageRouter = require("./mainpageRouter");
+const productRouter = require("./productRouter");
+const cartRouter = require("./productRouter");
 
-router.use("/mainpage", mainpageRouter);
+router.use("/products", productRouter);
+router.use("/products", cartRouter);
 
 module.exports = router;

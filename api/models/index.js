@@ -1,7 +1,9 @@
 const dbDataSource = require("./dataSource");
-const mainpageDao = require("./mainpageDao");
+const productDao = require("./productDao");
+const cartDao = require("./cartDao");
 
 module.exports = {
   dbDataSource,
-  mainpageDao,
+  productDao,
+  cartDao,
 };
