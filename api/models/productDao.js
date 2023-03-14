@@ -42,10 +42,7 @@ const getProductsGenderStatusCategory = async (condition) => {
         whereClause = whereClause + ` AND (pg.id = {$gender})`;
       }
     }
-  } // gender
-  console.log("!!!!!!!!!!!!!");
-  console.log(whereClause);
-  console.log(gender);
+  }
 
   if (status == "blank") {
     whereClause = whereClause;
@@ -55,12 +52,7 @@ const getProductsGenderStatusCategory = async (condition) => {
     } else {
       whereClause = whereClause + ` AND (ps.id = ${status})`;
     }
-  } // status
-  console.log("@@@@");
-  console.log(status);
-
-  console.log("!!!!!!!!!!!!!");
-  console.log(whereClause);
+  }
 
   if (category == "blank") {
     whereClause = whereClause;
@@ -70,10 +62,7 @@ const getProductsGenderStatusCategory = async (condition) => {
     } else {
       whereClause = whereClause + ` AND (pc.id = ${category})`;
     }
-  } // category
-  console.log("!!!!!!!!!!!!!");
-  console.log(whereClause);
-  console.log(category);
+  }
 
   if (productId == "blank") {
     whereClause = whereClause;
@@ -83,10 +72,7 @@ const getProductsGenderStatusCategory = async (condition) => {
     } else {
       whereClause = whereClause + ` AND (p.id = ${productId})`;
     }
-  } // id
-  console.log("!!!!!!!!!!!!!");
-  console.log(whereClause);
-  console.log(productId);
+  }
 
   const result = await dbDataSource.query(
     `
@@ -128,8 +114,6 @@ GROUP BY
 
   return result;
 };
-// JSON_ARRAYAGG(pcc.color) as colors
-// JOIN product_colors pcc ON po.product_color_id = pcc.id
 
 module.exports = {
   getProductsGenderStatusCategory,
