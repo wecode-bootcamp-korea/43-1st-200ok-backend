@@ -1,14 +1,9 @@
 const { productDao } = require("../models");
 
-const getProductsStatusGender = async (condition) => {
-  return productDao.getProductsStatusGender(condition);
-};
-
-const getProductsGenderCategory = async (condition) => {
-  return productDao.getProductsGenderCategory(condition);
+const getProductsGenderStatusCategory = async (condition) => {
+  return productDao.getProductsGenderStatusCategory(condition);
 };
 
 module.exports = {
-  getProductsStatusGender,
-  getProductsGenderCategory,
+  getProductsGenderStatusCategory,
 };

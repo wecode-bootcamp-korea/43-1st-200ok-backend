@@ -1,62 +1,25 @@
 const dbDataSource = require("./dataSource");
 
-const getProductsStatusGender = async (condition) => {
+const getProductsGenderStatusCategory = async (condition) => {
   let gender = condition.gender;
   let status = condition.status;
+  let category = condition.category;
+  let productId = condition.id;
+
   if (gender == "male") {
     gender = 1;
   } else if (gender == "female") {
     gender = 2;
+  } else if (gender == "malefemale") {
+    gender = 3;
   }
+
   if (status == "best") {
     status = 1;
   } else if (status == "new") {
     status = 2;
   }
-  const result = await dbDataSource.query(
-    `
-    SELECT 
-    name, price, discount_rate, (1-0.01*discount_rate)*price as discounted_price, image_url
-    FROM
-    products
-    JOIN
-    product_genders
-    ON
-    products.product_gender_id = product_genders.id
-    JOIN 
-    product_statuses  
-    ON
-    products.product_status_id=product_statuses.id
-    JOIN 
-    product_options
-    ON 
-    product_options.product_id = products.id
-    JOIN
-    product_colors
-    ON 
-    product_colors.id = product_options.product_color_id
-    JOIN 
-    product_sizes
-    ON 
-    product_sizes.id = product_options.product_size_id
-    WHERE
-    product_genders.id = ?
-    AND
-    product_statuses.id = ?
-    `,
-    [gender, status]
-  );
-  return result;
-};
 
-const getProductsGenderCategory = async (condition) => {
-  let gender = condition.gender;
-  let category = condition.category;
-  if (gender == "male") {
-    gender = 1;
-  } else if (gender == "female") {
-    gender = 2;
-  }
   if (category == "outer") {
     category = 1;
   } else if (category == "top") {
@@ -64,31 +27,110 @@ const getProductsGenderCategory = async (condition) => {
   } else if (category == "bottom") {
     category = 3;
   }
+
+  let whereClause = "";
+
+  if (gender == "blank") {
+    whereClause = whereClause;
+  } else {
+    if (gender == 3) {
+      whereClause = whereClause;
+    } else {
+      if (whereClause == "") {
+        whereClause = whereClause + `WHERE (pg.id = ${gender})`;
+      } else {
+        whereClause = whereClause + ` AND (pg.id = {$gender})`;
+      }
+    }
+  } // gender
+  console.log("!!!!!!!!!!!!!");
+  console.log(whereClause);
+  console.log(gender);
+
+  if (status == "blank") {
+    whereClause = whereClause;
+  } else {
+    if (whereClause == "") {
+      whereClause = whereClause + `WHERE (ps.id = ${status})`;
+    } else {
+      whereClause = whereClause + ` AND (ps.id = ${status})`;
+    }
+  } // status
+  console.log("@@@@");
+  console.log(status);
+
+  console.log("!!!!!!!!!!!!!");
+  console.log(whereClause);
+
+  if (category == "blank") {
+    whereClause = whereClause;
+  } else {
+    if (whereClause == "") {
+      whereClause = whereClause + `WHERE (pc.id = ${category})`;
+    } else {
+      whereClause = whereClause + ` AND (pc.id = ${category})`;
+    }
+  } // category
+  console.log("!!!!!!!!!!!!!");
+  console.log(whereClause);
+  console.log(category);
+
+  if (productId == "blank") {
+    whereClause = whereClause;
+  } else {
+    if (whereClause == "") {
+      whereClause = whereClause + `WHERE (p.id = ${id})`;
+    } else {
+      whereClause = whereClause + ` AND (p.id = ${productId})`;
+    }
+  } // id
+  console.log("!!!!!!!!!!!!!");
+  console.log(whereClause);
+  console.log(productId);
+
   const result = await dbDataSource.query(
     `
-    SELECT 
-    name, price, discount_rate, (1-0.01*discount_rate)*price as discounted_price, image_url
-    FROM
-    products
-    JOIN
-    product_genders
-    ON
-    products.product_gender_id = product_genders.id
-    JOIN 
-    product_categories
-    ON
-    products.product_category_id=product_categories.id
-    WHERE
-    product_genders.id = ?
-    AND
-    product_categories.id = ?
-    `,
-    [gender, category]
+    SELECT
+    p.id,
+    p.name,
+    p.price,
+    p.discount_rate,
+    (1-0.01*p.discount_rate)*p.price as discounted_price,
+    p.image_url,
+    (
+        SELECT JSON_ARRAYAGG(color)
+        FROM (
+            SELECT DISTINCT pcc.color
+            FROM product_options po
+            JOIN product_colors pcc ON po.product_color_id = pcc.id
+            WHERE po.product_id = p.id
+        ) colors
+    ) as colors,
+    (
+        SELECT JSON_ARRAYAGG(size)
+        FROM (
+            SELECT DISTINCT pss.size
+            FROM product_options po
+            JOIN product_sizes pss ON po.product_size_id = pss.id
+            WHERE po.product_id = p.id
+        ) sizes
+    ) as sizes
+FROM
+    products p
+JOIN product_genders pg ON p.product_gender_id = pg.id
+JOIN product_statuses ps ON p.product_status_id = ps.id
+JOIN product_categories pc ON p.product_category_id = pc.id
+${whereClause}
+GROUP BY
+    p.id
+    `
   );
+
   return result;
 };
+// JSON_ARRAYAGG(pcc.color) as colors
+// JOIN product_colors pcc ON po.product_color_id = pcc.id
 
 module.exports = {
-  getProductsStatusGender,
-  getProductsGenderCategory,
+  getProductsGenderStatusCategory,
 };
