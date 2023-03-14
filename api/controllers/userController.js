@@ -1,5 +1,4 @@
 const userService = require("../services/userService");
-const { DataSource } = require("typeorm");
 
 const signUp = async (req, res) => {
   const { password, name, phoneNumber, email, privacyTermEssential } = req.body;
@@ -18,7 +17,18 @@ const signUp = async (req, res) => {
     privacyTermEssential
   );
 
-  return res.status(201).json({ insertId });
+  return res.status(201).json({ message: insertId });
 };
 
-module.exports = { signUp };
+const signIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const accessToken = await userService.signIn(email, password);
+    return res.status(200).json({ accessToken });
+  } catch (error) {
+    console.error(error);
+    return res.status(error.statusCode).json({ message: error.message });
+  }
+};
+
+module.exports = { signUp, signIn };
