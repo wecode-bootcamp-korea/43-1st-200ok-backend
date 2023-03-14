@@ -13,12 +13,47 @@ const getProductsGenderStatusCategory = async (condition) => {
   } else if (gender == "malefemale") {
     gender = 3;
   }
+  // console.log(gender, status, category, productId);
+  // const Gender = {
+  //   male: 1,
+  //   female: 2,
+  //   malefemale: 3,
+  // };
+  // function changeGenderNumber(gender) {
+  //   switch (gender) {
+  //     case Gender.male:
+  //       gender = 1;
+  //       break;
+  //     case Gender.female:
+  //       gender = 2;
+  //       break;
+  //     case Gender.malefemale:
+  //       gender = 3;
+  //       break;
+  //   }
+  // }
+  // gender = changeGenderNumber(gender);
 
   if (status == "best") {
     status = 1;
   } else if (status == "new") {
     status = 2;
   }
+  // const Status = {
+  //   best: 1,
+  //   new: 2,
+  // };
+  // function changeStatusNumber(status) {
+  //   switch (status) {
+  //     case Status.best:
+  //       gender == 1;
+  //       break;
+  //     case Status.new:
+  //       gender == 2;
+  //       break;
+  //   }
+  // }
+  // status = changeStatusNumber(status);
 
   if (category == "outer") {
     category = 1;
@@ -27,6 +62,25 @@ const getProductsGenderStatusCategory = async (condition) => {
   } else if (category == "bottom") {
     category = 3;
   }
+  // const Category = {
+  //   outer: 1,
+  //   top: 2,
+  //   bottom: 3,
+  // };
+  // function changeCategoryNumber(category) {
+  //   switch (category) {
+  //     case Category.outer:
+  //       gender == 1;
+  //       break;
+  //     case Category.top:
+  //       gender == 2;
+  //       break;
+  //     case Category.bottom:
+  //       gender == 2;
+  //       break;
+  //   }
+  // }
+  // category = changeCategoryNumber(category);
 
   let whereClause = "";
 
@@ -43,6 +97,7 @@ const getProductsGenderStatusCategory = async (condition) => {
       }
     }
   }
+  console.log(whereClause);
 
   if (status == "blank") {
     whereClause = whereClause;
@@ -53,6 +108,7 @@ const getProductsGenderStatusCategory = async (condition) => {
       whereClause = whereClause + ` AND (ps.id = ${status})`;
     }
   }
+  console.log(whereClause);
 
   if (category == "blank") {
     whereClause = whereClause;
@@ -63,6 +119,7 @@ const getProductsGenderStatusCategory = async (condition) => {
       whereClause = whereClause + ` AND (pc.id = ${category})`;
     }
   }
+  console.log(whereClause);
 
   if (productId == "blank") {
     whereClause = whereClause;
@@ -73,6 +130,7 @@ const getProductsGenderStatusCategory = async (condition) => {
       whereClause = whereClause + ` AND (p.id = ${productId})`;
     }
   }
+  console.log(whereClause);
 
   const result = await dbDataSource.query(
     `
