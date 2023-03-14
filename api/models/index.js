@@ -1,5 +1,7 @@
-const dbDataSource = require("./dataSource");
+const invalidEmailDao = require("./invalidEmailDao");
+const userDao = require("./userDao");
 
 module.exports = {
-  dbDataSource,
+  invalidEmailDao,
+  userDao,
 };
