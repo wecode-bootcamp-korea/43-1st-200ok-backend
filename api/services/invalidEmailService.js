@@ -1,7 +1,7 @@
 const { invalidEmailDao } = require("../models");
 
-const check = async () => {
-  return invalidEmailDao.check();
+const checkSignedEmail = async (userId) => {
+  return invalidEmailDao.checkEmailDuplicacy(userId);
 };
 
-module.exports = { check };
+module.exports = { checkSignedEmail };

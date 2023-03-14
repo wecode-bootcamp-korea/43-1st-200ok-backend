@@ -1,28 +1,53 @@
 const { appDataSource } = require("./dataSource");
 
 const createUser = async (
-  name,
-  email,
   password,
+  name,
   phoneNumber,
+  email,
   privacyTermEssential
 ) => {
   const result = await appDataSource.query(
     `
   INSERT INTO users (
-    name,
-    email,
-    password,
-    phone_number,
-    privacy_term_essential
+    password, name, phone_number, email, privacy_term_essential
   ) VALUES (?, ?, ?, ?, ?)
   `,
-    [name, email, password, phoneNumber, privacyTermEssential]
+    [password, name, phoneNumber, email, privacyTermEssential]
   );
-  console.log(result, 123123123123);
   return result.insertId;
+};
+
+const getUserByEmail = async (email) => {
+  const result = await appDataSource.query(
+    `
+		SELECT 
+    password, name, phone_number, email, privacy_term_essential
+		FROM  users
+		WHERE email=?
+	`,
+    [email]
+  );
+
+  return result[0];
+};
+
+const getUserById = async (id) => {
+  const result = await appDataSource.query(
+    `
+		SELECT 
+    password, name, phone_number, email, privacy_term_essential
+		FROM users
+		WHERE id=?
+	`,
+    [id]
+  );
+
+  return result[0];
 };
 
 module.exports = {
   createUser,
+  getUserByEmail,
+  getUserById,
 };

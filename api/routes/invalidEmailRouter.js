@@ -3,6 +3,6 @@ const { invalidEmailController } = require("../controllers");
 
 const router = express.Router();
 
-router.post("", invalidEmailController.check);
+router.post("", invalidEmailController.checkSignedEmail);
 
 module.exports = router;
