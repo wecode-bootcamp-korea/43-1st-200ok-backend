@@ -1,7 +1,7 @@
 -- migrate:up
-CREATE TABLE product_sizes(
+CREATE TABLE product_statuses(
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  size VARCHAR(30) NOT NULL
+  status VARCHAR(30) NULL
 )
 
 -- migrate:down
