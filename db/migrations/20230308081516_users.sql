@@ -15,8 +15,5 @@ CREATE TABLE users(
 )
 
 -- migrate:down
-<<<<<<<< HEAD:db/migrations/20230310112315_users.sql
 DROP TABLE users;
-========
-DROP TABLE users;
->>>>>>>> main:db/migrations/20230308081516_users.sql
+

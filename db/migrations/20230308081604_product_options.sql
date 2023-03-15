@@ -10,8 +10,5 @@ CREATE TABLE product_options(
 )
 
 -- migrate:down
-<<<<<<<< HEAD:db/migrations/20230310112424_product_options.sql
 DROP TABLE product_options;
-========
-DROP TABLE product_options;
->>>>>>>> main:db/migrations/20230308081604_product_options.sql
+

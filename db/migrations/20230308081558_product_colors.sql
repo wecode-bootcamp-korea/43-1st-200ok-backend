@@ -5,8 +5,4 @@ CREATE TABLE product_colors(
 )
 
 -- migrate:down
-<<<<<<<< HEAD:db/migrations/20230310112418_product_colors.sql
 DROP TABLE product_colors;
-========
-DROP TABLE product_colors;
->>>>>>>> main:db/migrations/20230308081558_product_colors.sql

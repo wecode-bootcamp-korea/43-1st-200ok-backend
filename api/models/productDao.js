@@ -1,4 +1,5 @@
 const dbDataSource = require("./dataSource");
+const Type = require("../utils/enum");
 
 const getProductsGenderStatusCategory = async (condition) => {
   let gender = condition.gender.toUpperCase();
@@ -6,27 +7,11 @@ const getProductsGenderStatusCategory = async (condition) => {
   let category = condition.category.toUpperCase();
   let productId = condition.id.toUpperCase();
 
-  console.log(gender, status, category, productId);
+  gender = await Type.checkGender(gender);
 
-  const genderEnum = Object.freeze({
-    MALE: 1,
-    FEMALE: 2,
-    MALEFEMALE: 3,
-  });
-  gender = genderEnum[gender];
+  status = await Type.checkStatus(status);
 
-  const statusEnum = Object.freeze({
-    BEST: 1,
-    NEW: 2,
-  });
-  status = statusEnum[status];
-
-  const categoryEnum = {
-    OUTER: 1,
-    TOP: 2,
-    BOTTOM: 3,
-  };
-  category = categoryEnum[category];
+  category = await Type.checkCategory(category);
 
   let whereClause = "";
 
@@ -43,7 +28,6 @@ const getProductsGenderStatusCategory = async (condition) => {
       }
     }
   }
-  console.log(whereClause);
 
   if (status == "BLANK") {
     whereClause = whereClause;
@@ -54,7 +38,6 @@ const getProductsGenderStatusCategory = async (condition) => {
       whereClause = whereClause + ` AND (ps.id = ${status})`;
     }
   }
-  console.log(whereClause);
 
   if (category == "BLANK") {
     whereClause = whereClause;
@@ -65,7 +48,6 @@ const getProductsGenderStatusCategory = async (condition) => {
       whereClause = whereClause + ` AND (pc.id = ${category})`;
     }
   }
-  console.log(whereClause);
 
   if (productId == "BLANK") {
     whereClause = whereClause;
@@ -76,7 +58,6 @@ const getProductsGenderStatusCategory = async (condition) => {
       whereClause = whereClause + ` AND (p.id = ${productId})`;
     }
   }
-  console.log(whereClause);
 
   const result = await dbDataSource.query(
     `
