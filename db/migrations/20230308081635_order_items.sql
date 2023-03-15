@@ -13,4 +13,8 @@ CREATE TABLE order_items (
 )
 
 -- migrate:down
+<<<<<<<< HEAD:db/migrations/20230310112442_order_items.sql
 DROP TABLE order_items;
+========
+DROP TABLE order_items;
+>>>>>>>> main:db/migrations/20230308081635_order_items.sql
