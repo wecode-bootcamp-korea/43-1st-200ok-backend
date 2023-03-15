@@ -46,8 +46,22 @@ const getUserById = async (id) => {
   return result[0];
 };
 
+const checkEmailDuplicacy = async (email) => {
+  const [result] = await appDataSource.query(
+    `SELECT
+        email
+      FROM
+        users
+      WHERE
+        email=?`,
+    [email]
+  );
+  return result;
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
   getUserById,
+  checkEmailDuplicacy,
 };

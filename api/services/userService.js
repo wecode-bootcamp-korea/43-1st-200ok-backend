@@ -1,8 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { emailValidate, passwordValidate } = require("../utils/userValidate.js");
 
-const userDao = require("../models/userDao");
+const {
+  emailValidate,
+  passwordValidate,
+} = require("../utils/validate-check.js");
+const { userDao } = require("../models");
 
 const hashPassword = async (plainTextPassword) => {
   const saltRounds = 10;
@@ -39,10 +42,14 @@ const signIn = async (email, password) => {
     res.status(401).json({ result: "로그인 정보가 잘못되었습니다." });
   }
 
-  const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+  const accessToken = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
   return accessToken;
 };
 
-module.exports = { signUp, signIn };
+const checkSignedEmail = async (email) => {
+  return userDao.checkEmailDuplicacy(email);
+};
+
+module.exports = { signUp, signIn, checkSignedEmail };

@@ -17,9 +17,11 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "morgan": "^1.10.0",
     "mysql2": "^3.2.0",
-    "nodemon": "^2.0.21",
     "typeorm": "^0.3.12"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.21"
   }
 }
