@@ -1,4 +1,5 @@
 const userService = require("../services/userService");
+const { invalidEmailService } = require("../services");
 
 const signUp = async (req, res) => {
   const { password, name, phoneNumber, email, privacyTermEssential } = req.body;
@@ -32,4 +33,16 @@ const signIn = async (req, res) => {
   }
 };
 
-module.exports = { signUp, signIn };
+const checkSignedEmail = async (req, res) => {
+  const { email } = req.body;
+  const result = await invalidEmailService.checkSignedEmail(email);
+  console.log(result);
+
+  if (!result) {
+    return res.status(400).json({ message: "가입 가능한 이메일 입니다." });
+  } else {
+    return res.status(201).json({ message: "이미 가입된 이메일 입니다." });
+  }
+};
+
+module.exports = { signUp, signIn, checkSignedEmail };

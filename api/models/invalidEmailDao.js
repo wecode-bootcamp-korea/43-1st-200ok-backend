@@ -1,16 +1,16 @@
 const { appDataSource } = require("./dataSource");
 
-const checkEmailDuplicacy = async (userId) => {
+const checkEmailDuplicacy = async (email) => {
   const [result] = await appDataSource.query(
     `SELECT
-        id
+        email
       FROM
         users
       WHERE
-        users.id=?`,
-    [userId]
+        email=?`,
+    [email]
   );
-  console.log(result);
+  return result;
 };
 
 module.exports = { checkEmailDuplicacy };

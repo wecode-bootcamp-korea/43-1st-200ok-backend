@@ -1,8 +1,8 @@
 const express = require("express");
-const { invalidEmailController } = require("../controllers");
+const { userController } = require("../controllers");
 
 const router = express.Router();
 
-router.post("", invalidEmailController.checkSignedEmail);
+router.post("", userController.checkSignedEmail);
 
 module.exports = router;

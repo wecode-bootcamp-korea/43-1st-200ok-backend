@@ -33,14 +33,10 @@ const signUp = async (
 
 const signIn = async (email, password) => {
   const user = await userDao.getUserByEmail(email);
-
-  if (!user) {
-    res.status(401).json({ result: "이메일이 잘못되었습니다." });
-  }
   const match = await bcrypt.compare(password, user.password);
 
-  if (!match) {
-    res.status(401).json({ result: "비밀번호가 잘못되었습니다." });
+  if (!user || !match) {
+    res.status(401).json({ result: "로그인 정보가 잘못되었습니다." });
   }
 
   const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
