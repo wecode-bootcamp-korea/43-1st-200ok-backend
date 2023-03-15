@@ -1,90 +1,36 @@
 const dbDataSource = require("./dataSource");
 
 const getProductsGenderStatusCategory = async (condition) => {
-  let gender = condition.gender;
-  let status = condition.status;
-  let category = condition.category;
-  let productId = condition.id;
+  let gender = condition.gender.toUpperCase();
+  let status = condition.status.toUpperCase();
+  let category = condition.category.toUpperCase();
+  let productId = condition.id.toUpperCase();
 
-  if (gender == "male") {
-    gender = 1;
-  } else if (gender == "female") {
-    gender = 2;
-  } else if (gender == "malefemale") {
-    gender = 3;
-  }
-  // console.log(gender, status, category, productId);
-  // const Gender = {
-  //   male: 1,
-  //   female: 2,
-  //   malefemale: 3,
-  // };
-  // function changeGenderNumber(gender) {
-  //   switch (gender) {
-  //     case Gender.male:
-  //       gender = 1;
-  //       break;
-  //     case Gender.female:
-  //       gender = 2;
-  //       break;
-  //     case Gender.malefemale:
-  //       gender = 3;
-  //       break;
-  //   }
-  // }
-  // gender = changeGenderNumber(gender);
+  console.log(gender, status, category, productId);
 
-  if (status == "best") {
-    status = 1;
-  } else if (status == "new") {
-    status = 2;
-  }
-  // const Status = {
-  //   best: 1,
-  //   new: 2,
-  // };
-  // function changeStatusNumber(status) {
-  //   switch (status) {
-  //     case Status.best:
-  //       gender == 1;
-  //       break;
-  //     case Status.new:
-  //       gender == 2;
-  //       break;
-  //   }
-  // }
-  // status = changeStatusNumber(status);
+  const genderEnum = Object.freeze({
+    MALE: 1,
+    FEMALE: 2,
+    MALEFEMALE: 3,
+  });
+  gender = genderEnum[gender];
 
-  if (category == "outer") {
-    category = 1;
-  } else if (category == "top") {
-    category = 2;
-  } else if (category == "bottom") {
-    category = 3;
-  }
-  // const Category = {
-  //   outer: 1,
-  //   top: 2,
-  //   bottom: 3,
-  // };
-  // function changeCategoryNumber(category) {
-  //   switch (category) {
-  //     case Category.outer:
-  //       gender == 1;
-  //       break;
-  //     case Category.top:
-  //       gender == 2;
-  //       break;
-  //     case Category.bottom:
-  //       gender == 2;
-  //       break;
-  //   }
-  // }
-  // category = changeCategoryNumber(category);
+  const statusEnum = Object.freeze({
+    BEST: 1,
+    NEW: 2,
+  });
+  status = statusEnum[status];
+
+  const categoryEnum = {
+    OUTER: 1,
+    TOP: 2,
+    BOTTOM: 3,
+  };
+  category = categoryEnum[category];
 
   let whereClause = "";
 
-  if (gender == "blank") {
+  if (gender == "BLANK") {
     whereClause = whereClause;
   } else {
     if (gender == 3) {
@@ -93,13 +39,13 @@ const getProductsGenderStatusCategory = async (condition) => {
       if (whereClause == "") {
         whereClause = whereClause + `WHERE (pg.id = ${gender})`;
       } else {
-        whereClause = whereClause + ` AND (pg.id = {$gender})`;
+        whereClause = whereClause + ` AND (pg.id = ${gender})`;
       }
     }
   }
   console.log(whereClause);
 
-  if (status == "blank") {
+  if (status == "BLANK") {
     whereClause = whereClause;
   } else {
     if (whereClause == "") {
@@ -110,7 +56,7 @@ const getProductsGenderStatusCategory = async (condition) => {
   }
   console.log(whereClause);
 
-  if (category == "blank") {
+  if (category == "BLANK") {
     whereClause = whereClause;
   } else {
     if (whereClause == "") {
@@ -121,7 +67,7 @@ const getProductsGenderStatusCategory = async (condition) => {
   }
   console.log(whereClause);
 
-  if (productId == "blank") {
+  if (productId == "BLANK") {
     whereClause = whereClause;
   } else {
     if (whereClause == "") {
