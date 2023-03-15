@@ -7,11 +7,11 @@ const getProductsGenderStatusCategory = async (condition) => {
   let category = condition.category.toUpperCase();
   let productId = condition.id.toUpperCase();
 
-  gender = await Type.checkGender(gender);
+  gender = await Type.GenderType[gender];
 
-  status = await Type.checkStatus(status);
+  status = await Type.StatusType[status];
 
-  category = await Type.checkCategory(category);
+  category = await Type.CategoryType[category];
 
   let whereClause = "";
 
