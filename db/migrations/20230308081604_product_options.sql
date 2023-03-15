@@ -11,3 +11,4 @@ CREATE TABLE product_options(
 
 -- migrate:down
 DROP TABLE product_options;
+

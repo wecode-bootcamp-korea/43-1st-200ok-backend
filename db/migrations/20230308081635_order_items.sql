@@ -14,3 +14,4 @@ CREATE TABLE order_items (
 
 -- migrate:down
 DROP TABLE order_items;
+
