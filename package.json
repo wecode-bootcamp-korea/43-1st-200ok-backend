@@ -1,5 +1,5 @@
 {
-  "name": "43-1st-200ok-backend",
+  "name": "43-1st-sipscent-backend-main",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,17 +7,9 @@
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wecode-bootcamp-korea/43-1st-200ok-backend.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/wecode-bootcamp-korea/43-1st-200ok-backend/issues"
-  },
-  "homepage": "https://github.com/wecode-bootcamp-korea/43-1st-200ok-backend#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
