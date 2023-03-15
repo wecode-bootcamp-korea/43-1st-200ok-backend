@@ -1,7 +1,7 @@
 const { cartDao } = require("../models");
 
-const postCart = async (condition) => {
-  return cartDao.postCart(condition);
+const postCart = async (productId, size, color, quantity, userId) => {
+  return cartDao.postCart(productId, size, color, quantity, userId);
 };
 
 module.exports = {

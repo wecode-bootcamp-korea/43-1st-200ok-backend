@@ -20,6 +20,7 @@ dbDataSource
 const app = express();
 const PORT = process.env.PORT;
 const IPADDRESS = process.env.IPADDRESS;
+const LOCALADDRESS = process.env.LOCALADDRESS;
 
 app.use(cors());
 app.use(morgan("combined"));
@@ -31,8 +32,8 @@ app.get("/ping", (req, res) => {
   res.status(200).json({ message: "pong" });
 });
 
-app.listen(PORT, IPADDRESS, () => {
+app.listen(PORT, LOCALADDRESS, () => {
   console.log(
-    `🚀🚀🚀 Server Listening to request on ${IPADDRESS}:${PORT} 🚀🚀🚀`
+    `🚀🚀🚀 Server Listening to request on ${LOCALADDRESS}:${PORT} 🚀🚀🚀`
   );
 });

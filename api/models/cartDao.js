@@ -1,48 +1,33 @@
 const dbDataSource = require("./dataSource");
 const jwt = require("jsonwebtoken");
 
-const postCart = async (condition) => {
+const postCart = async (productId, size, color, quantity, userId) => {
   // cart에 수량이랑 user_id랑 다 같이 넘거야함
-  let productId = condition.productId;
-  let size = condition.size;
-  let color = condition.color;
-  let quantity = condition.quantity;
-  let userId = condition.userId;
-  let userIdTest =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2Nzg4NDMzNDIsImV4cCI6MTY3OTAxNjE0Mn0.7yq-OQJRPNF5CnzFuhO3OfHLL9bsQtuLi8xoSL7p79c";
+  // let userIdTest =
+  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2Nzg4NDMzNDIsImV4cCI6MTY3OTAxNjE0Mn0.7yq-OQJRPNF5CnzFuhO3OfHLL9bsQtuLi8xoSL7p79c";
   // email = "poiuy09876@email.com"
 
   console.log("@@@@@@@@@@@@");
   console.log(productId, size, color, quantity, userId);
   console.log("@@@@@@@@@@@@");
 
-  if (color == "blue") {
-    color = 1;
-  } else if (color == "black") {
-    color = 2;
-  } else if (color == "gray") {
-    color = 3;
-  } else if (color == "red") {
-    color = 4;
-  } else if (color == "yellow") {
-    color = 5;
-  } else if (color == "green") {
-    color = 6;
-  } else if (color == "purple") {
-    color = 7;
-  }
+  const colorEnum = Object.freeze({
+    BLUE: 1,
+    BLACK: 2,
+    GRAY: 3,
+    RED: 4,
+    YELLOW: 5,
+    GREEN: 6,
+    PURPLE: 7,
+  });
+  color = colorEnum[color];
 
-  if (size == "m") {
-    size = 1;
-  } else if (size == "l") {
-    size = 2;
-  } else if (size == "xl") {
-    size = 3;
-  }
-
-  console.log("@@@@@@@@@@@@");
-  console.log(productId, size, color, quantity, userId);
-  console.log("@@@@@@@@@@@@");
+  const sizeEnum = Object.freeze({
+    M: 1,
+    L: 2,
+    XL: 3,
+  });
+  size = sizeEnum[size];
 
   const getProductOptionId = async (color, size, productId) => {
     const productOptionId = await dbDataSource.query(
@@ -57,35 +42,23 @@ const postCart = async (condition) => {
     );
     return productOptionId;
   }; // product_option id를 받음
-  let productOptionId = await getProductOptionId(color, size, productId);
+  const productOptionId = await getProductOptionId(color, size, productId);
+  console.log(productOptionId[0].id); // product_option id를 받음
 
-  console.log("#############");
-  console.log(productOptionId[0].id);
-  console.log("#############");
-
-  let decoded = jwt.verify(userIdTest, process.env.JWT_SECRET);
+  const decoded = jwt.verify(userIdTest, process.env.JWT_SECRET);
   console.log(decoded);
-  console.log(decoded.id);
+  console.log(decoded.id); // 이렇게 하면 그 토큰을 쓴 user_id가 누구인지 알 수 있음
 
-  const getUserIdByToken = async (userId) => {
-    const userIdByToken = await dbDataSource.query(
-      `
-      SELECT products.id
-      FROM products
-      `
-    );
-  }; // token값 비교를 통해 user_id가 누구인지 알아냄
-
-  const result = await dbDataSource.query(
+  const addToCart = await dbDataSource.query(
     `
     INSERT INTO carts (quantity, user_id, product_option_id)
     VALUES (?, ?, ?);
     `,
-    [quantity, userId, productOptionId[0].id]
+    [quantity, decoded.id, productOptionId[0].id]
   );
   return result.status(201).json({ message: "CART ADDED" });
 };
-// enum 객체로 정리 object.freeze
+
 module.exports = {
   postCart,
 };
