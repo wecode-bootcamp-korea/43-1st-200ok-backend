@@ -1,4 +1,4 @@
-const { appDataSource } = require("./dataSource");
+const dbDataSource = require("./dataSource");
 
 const createUser = async (
   password,
@@ -7,19 +7,17 @@ const createUser = async (
   email,
   privacyTermEssential
 ) => {
-  const result = await appDataSource.query(
+  const result = await dbDataSource.query(
     `
-  INSERT INTO users (
-    password, name, phone_number, email, privacy_term_essential
-  ) VALUES (?, ?, ?, ?, ?)
-  `,
+  INSERT INTO users (password, name, phone_number, email, privacy_term_essential) VALUES (?, ?, ?, ?, ?)
+    `,
     [password, name, phoneNumber, email, privacyTermEssential]
   );
   return result.insertId;
 };
 
 const getUserByEmail = async (email) => {
-  const result = await appDataSource.query(
+  const result = await dbDataSource.query(
     `
 		SELECT 
     password, name, phone_number, email, privacy_term_essential
@@ -33,7 +31,7 @@ const getUserByEmail = async (email) => {
 };
 
 const getUserById = async (id) => {
-  const result = await appDataSource.query(
+  const result = await dbDataSource.query(
     `
 		SELECT 
     password, name, phone_number, email, privacy_term_essential
@@ -47,7 +45,7 @@ const getUserById = async (id) => {
 };
 
 const checkEmailDuplicacy = async (email) => {
-  const [result] = await appDataSource.query(
+  const [result] = await dbDataSource.query(
     `SELECT
         email
       FROM

@@ -5,19 +5,14 @@ const getProductsGenderStatusCategory = async (condition) => {
   let gender = condition.gender.toUpperCase();
   let status = condition.status.toUpperCase();
   let category = condition.category.toUpperCase();
-  let productId = condition.id.toUpperCase();
-
-  gender = await Type.GenderType[gender];
-
-  status = await Type.StatusType[status];
-
-  category = await Type.CategoryType[category];
+  let productId = condition.productId.toUpperCase();
 
   let whereClause = "";
 
   if (gender == "BLANK") {
     whereClause = whereClause;
   } else {
+    gender = await Type.GenderType[gender];
     if (gender == 3) {
       whereClause = whereClause;
     } else {
@@ -32,6 +27,8 @@ const getProductsGenderStatusCategory = async (condition) => {
   if (status == "BLANK") {
     whereClause = whereClause;
   } else {
+    status = await Type.StatusType[status];
+
     if (whereClause == "") {
       whereClause = whereClause + `WHERE (ps.id = ${status})`;
     } else {
@@ -42,6 +39,7 @@ const getProductsGenderStatusCategory = async (condition) => {
   if (category == "BLANK") {
     whereClause = whereClause;
   } else {
+    category = await Type.CategoryType[category];
     if (whereClause == "") {
       whereClause = whereClause + `WHERE (pc.id = ${category})`;
     } else {

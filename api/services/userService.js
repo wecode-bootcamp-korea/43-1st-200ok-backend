@@ -42,9 +42,7 @@ const signIn = async (email, password) => {
     res.status(401).json({ result: "로그인 정보가 잘못되었습니다." });
   }
 
-  const accessToken = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+  const accessToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
   return accessToken;
 };
 
