@@ -1,4 +1,4 @@
-const { dbDataSource } = require("./dataSource");
+const dbDataSource = require("./dataSource");
 
 const createUser = async (
   password,
@@ -7,7 +7,6 @@ const createUser = async (
   email,
   privacyTermEssential
 ) => {
-  console.log(password, name, phoneNumber, email, privacyTermEssential);
   const result = await dbDataSource.query(
     `
   INSERT INTO users (password, name, phone_number, email, privacy_term_essential) VALUES (?, ?, ?, ?, ?)
@@ -16,28 +15,6 @@ const createUser = async (
   );
   return result.insertId;
 };
-
-// const createUser = async (
-// //   password,
-// //   name,
-// //   phoneNumber,
-// //   email,
-// //   privacyTermEssential
-// // ) => {
-// //   console.log(password, name, phoneNumber, email, privacyTermEssential);
-// //   const result = await dbDataSource.query(
-// //     `
-// //   INSERT INTO users (
-// //     password, name, phone_number, email, privacy_term_essential
-// //   ) VALUES (?, ?, ?, ?, ?)
-// //   `,
-// //     [password, name, phoneNumber, email, privacyTermEssential]
-// //   );
-// //   console.log("!@@@@@@@@@");
-// //   console.log(result);
-// //   return result.insertId;
-
-// };
 
 const getUserByEmail = async (email) => {
   const result = await dbDataSource.query(

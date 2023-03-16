@@ -1,16 +1,7 @@
 const dbDataSource = require("./dataSource");
 const jwt = require("jsonwebtoken");
 
-const postCart = async (productId, size, color, quantity, userId) => {
-  // cart에 수량이랑 user_id랑 다 같이 넘거야함
-  // let userIdTest =
-  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2Nzg4NDMzNDIsImV4cCI6MTY3OTAxNjE0Mn0.7yq-OQJRPNF5CnzFuhO3OfHLL9bsQtuLi8xoSL7p79c";
-  // email = "poiuy09876@email.com"
-
-  console.log("@@@@@@@@@@@@");
-  console.log(productId, size, color, quantity, userId);
-  console.log("@@@@@@@@@@@@");
-
+const postCart = async (productId, size, color, quantity, token) => {
   const colorEnum = Object.freeze({
     BLUE: 1,
     BLACK: 2,
@@ -41,24 +32,135 @@ const postCart = async (productId, size, color, quantity, userId) => {
       [color, size, productId]
     );
     return productOptionId;
-  }; // product_option id를 받음
+  };
   const productOptionId = await getProductOptionId(color, size, productId);
-  console.log(productOptionId[0].id); // product_option id를 받음
 
-  const decoded = jwt.verify(userIdTest, process.env.JWT_SECRET);
-  console.log(decoded);
-  console.log(decoded.id); // 이렇게 하면 그 토큰을 쓴 user_id가 누구인지 알 수 있음
-
-  const addToCart = await dbDataSource.query(
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const userEmail = decoded.email;
+  const userId = await dbDataSource.query(
     `
-    INSERT INTO carts (quantity, user_id, product_option_id)
-    VALUES (?, ?, ?);
+    SELECT id
+    FROM users
+    WHERE email = ?
     `,
-    [quantity, decoded.id, productOptionId[0].id]
+    [userEmail]
   );
-  return result.status(201).json({ message: "CART ADDED" });
+  let uid = userId[0].id;
+  let poid = productOptionId[0].id;
+
+  const length = await dbDataSource.query(
+    `
+    SELECT * FROM carts WHERE carts.user_id = ? AND carts.product_option_id = ?
+    `,
+    [uid, poid]
+  );
+  if (length.length > 0) {
+    await dbDataSource.query(
+      `
+      UPDATE carts SET quantity = ? WHERE carts.user_id = ?
+      `,
+      [parseInt(length[0].quantity) + parseInt(quantity), uid]
+    );
+  } else {
+    await dbDataSource.query(
+      `
+      INSERT INTO carts (quantity, user_id, product_option_id)
+      VALUES (?, ?, ?);
+      `,
+      [quantity, uid, poid]
+    );
+  }
+};
+
+const getCart = async (token) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const userEmail = decoded.email;
+  const userId = await dbDataSource.query(
+    `
+    SELECT id
+    FROM users
+    WHERE email = ?
+    `,
+    [userEmail]
+  );
+  let uid = userId[0].id;
+  const result = await dbDataSource.query(
+    `
+    SELECT 
+    name, image_url, (1-0.01*discount_rate)*price as discount_price, carts.quantity, carts.id as cartId, product_colors.color, product_sizes.size
+    FROM 
+    products
+    JOIN 
+    product_options
+    ON 
+    product_options.product_id = products.id
+    JOIN 
+    carts
+    ON
+    product_options.id = carts.product_option_id
+    JOIN
+    product_colors
+    ON
+    product_options.product_color_id = product_colors.id
+    JOIN
+    product_sizes
+    ON
+    product_options.product_size_id = product_sizes.id
+    WHERE 
+    carts.user_id = ?
+    `,
+    [uid]
+  );
+  return result;
+};
+
+const deleteCart = async (cartId, token) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const userEmail = decoded.email;
+  const userId = await dbDataSource.query(
+    `
+    SELECT id
+    FROM users
+    WHERE email = ?
+    `,
+    [userEmail]
+  );
+  let uid = userId[0].id;
+
+  let splitedCartId = cartId.split(",");
+
+  for (let i = 0; i < splitedCartId.length; i++) {
+    await dbDataSource.query(
+      `
+      DELETE FROM
+      carts
+      WHERE
+      carts.id = ?
+      `,
+      [splitedCartId[i]]
+    );
+  }
+
+  const result = await dbDataSource.query(
+    `
+    SELECT
+    products.name, products.image_url, (1-0.01*discount_rate)*price as discount_price, carts.quantity, carts.product_option_id
+    FROM
+    products
+    JOIN
+    carts
+    ON
+    products.id = carts.user_id
+    WHERE
+    carts.user_id = ?
+    `,
+    [uid]
+  );
+  return result;
 };
 
 module.exports = {
   postCart,
+  getCart,
+  deleteCart,
 };
